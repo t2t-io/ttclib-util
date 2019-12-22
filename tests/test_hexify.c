@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
     printf("%s with %lld bytes\n", path, sb.st_size);
 
-    printf("0x2F => %s\n", ttlib_util_byte2hex(0x2F, 1));
-    printf("0x4A => %s\n", ttlib_util_byte2hex(0x4A, 0));
+    printf("0x2F => '%s'\n", ttlib_util_byte2hex(0x2F, true, '\0'));
+    printf("0x4A => '%s'\n", ttlib_util_byte2hex(0x4A, false, ' '));
     return 0;
 }

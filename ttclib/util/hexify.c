@@ -73,7 +73,19 @@ static const char *UPPERCASE_CHARS = "0123456789ABCDEF";
 /*-------------------------------------------------------------------------*/
 /* Local Variables                                                         */
 /*-------------------------------------------------------------------------*/
-static char m_hex_buffer[3] = {0};
+
+/* internal string buffer for single byte in hex format, e.g. 0x1F. Only 3 
+ * bytes of the buffer is used in typical use cases, but declaring 4 bytes 
+ * is because of 2 reasons:
+ *      1. better performance (single uint32_t assignment better than memcpy)
+ *      2. memory alignment
+ */
+static char m_hex_buffer[4] = {0};  
+
+/* external string buffer for single byte in hex format, as return value
+ * of `ttlib_util_byte2hex`.
+ */
+static char m_hex_output[4] = {0};  
 
 
 /*-------------------------------------------------------------------------*/
@@ -88,22 +100,26 @@ static char m_hex_buffer[3] = {0};
  * next time of calling the same function.
  * 
  * @param c         The given byte to be converted.
- * @param uppercase `true` to use uppercase characters (A ~ F). `false` to use 
- *                  lowercase characters.
+ * @param lowercase `true` to use lowercase characters (A ~ F). `false` to use 
+ *                  uppercase characters.
+ * @param tailing   The tailing character of hex string. Typically, it shall be
+ *                  '\0' (0x00).
  * @return char*    The pointer to the buffer with hex string. NULL indicates
  *                  the given parameters are invalid.
  */
-char* ttlib_util_byte2hex(uint8_t c, bool uppercase)
+const char* ttlib_util_byte2hex(uint8_t c, bool lowercase, char tailing)
 {
-    const char* hexes = uppercase ? UPPERCASE_CHARS : LOWERCASE_CHARS;
-    uint8_t hsb = (uint8_t) ((c & 0xF0) >> 4);
-    uint8_t lsb = c & 0x0F;
+    const char* hexes = lowercase ? LOWERCASE_CHARS : UPPERCASE_CHARS;
+    int hsb = (c & 0xF0) >> 4;
+    int lsb = (c & 0x0F) >> 0;
 
     m_hex_buffer[0] = hexes[hsb];
     m_hex_buffer[1] = hexes[lsb];
-    m_hex_buffer[2] = 0;
+    m_hex_buffer[2] = tailing;
+    m_hex_buffer[3] = 0;
 
-    return m_hex_buffer;
+    * ((uint32_t *) m_hex_output) = * ((uint32_t *) m_hex_buffer);
+    return m_hex_output;
 }
 
 /*-------------------------------------------------------------------------*/

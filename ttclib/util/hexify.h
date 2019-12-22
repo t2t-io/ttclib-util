@@ -70,12 +70,14 @@ extern "C"
  * next time of calling the same function.
  * 
  * @param c         The given byte to be converted.
- * @param uppercase `true` to use uppercase characters (A ~ F). `false` to use 
- *                  lowercase characters.
+ * @param lowercase `true` to use lowercase characters (A ~ F). `false` to use 
+ *                  uppercase characters.
+ * @param tailing   The tailing character of hex string. Typically, it shall be
+ *                  '\0' (0x00).
  * @return char*    The pointer to the buffer with hex string. NULL indicates
  *                  the given parameters are invalid.
  */
-char* ttlib_util_byte2hex(uint8_t c, bool uppercase);
+const char* ttlib_util_byte2hex(uint8_t c, bool lowercase, char tailing);
 
 #ifdef __cplusplus
 }

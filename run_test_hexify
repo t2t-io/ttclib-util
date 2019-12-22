@@ -1,3 +1,3 @@
 #!/bin/bash
 #
-cc -I. -o /tmp/hexify ./tests/test_hexify.c ./ttclib/util/hexify.c && /tmp/hexify /tmp/hexify
+cc -I. -o /tmp/hexify ./tests/test_hexify.c ./ttclib/util/hexify.c && ls -al /tmp/hexify && echo "" && /tmp/hexify /tmp/hexify
