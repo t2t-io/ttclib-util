@@ -58,6 +58,18 @@ extern "C"
 /* Types and Structures                                                    */
 /*-------------------------------------------------------------------------*/
 
+/**
+ * @brief Callback function for hexify() to print out hexadecimal string every 16 bytes
+ * 
+ * @param   ctx         the context for the printout task
+ * @param   ptr         the pointer to the data buffer to be hexified; treated as
+ *                      unique task id for the call to hexify().
+ * @param   times       the number of times of output the hexadecimal string for 16 bytes
+ * @param   string      the hexadecimal string to be output, converted from 
+ */
+typedef void (* hexify_printout) (void *ctx, void *ptr, int times, char *string);
+
+
 /*-------------------------------------------------------------------------*/
 /* Global Function Prototypes                                              */
 /*-------------------------------------------------------------------------*/
@@ -78,6 +90,19 @@ extern "C"
  *                  the given parameters are invalid.
  */
 const char* ttlib_util_byte2hex(uint8_t c, bool lowercase, char tailing);
+
+
+/**
+ * @brief Dump memory buffer in hex.
+ * 
+ * @param ptr       the pointer of data buffer to be dumped
+ * @param count     the number of bytes in the data buffer
+ * @param printout  the callback function to print out the dump info every 16 bytes
+ * @param ctx       the context to be passed when calling printout callback function
+ * @return int      `0` is okay. Non-zero is error.
+ */
+int ttlib_util_hexify(void *ptr, size_t count, hexify_printout printout, void *ctx);
+
 
 #ifdef __cplusplus
 }
